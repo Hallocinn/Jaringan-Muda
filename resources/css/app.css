@@ -1,0 +1,424 @@
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Segoe UI',Roboto,Arial,sans-serif;
+background:#f0fdf4;
+color:#1b4332;
+line-height:1.6;
+overflow-x:hidden;
+}
+
+.wrapper{
+display:flex;
+min-height:100vh;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar{
+width:240px;
+height:100vh;
+position:fixed;
+left:0;
+top:0;
+background:#14532d;
+color:#fff;
+display:flex;
+flex-direction:column;
+transition:0.3s ease;
+z-index:1000;
+overflow:hidden;
+}
+
+/* COLLAPSED */
+
+.sidebar.collapsed{
+width:70px;
+}
+
+.sidebar.collapsed .logo,
+.sidebar.collapsed .menu-text,
+.sidebar.collapsed .arrow-icon{
+display:none;
+}
+
+.sidebar.collapsed .menu a,
+.sidebar.collapsed .submenu-toggle{
+justify-content:center;
+padding:14px 0;
+}
+
+/* =====================================================
+   SIDEBAR HEADER
+===================================================== */
+
+.sidebar-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:18px;
+background:#0f3d23;
+min-height:65px;
+}
+
+.logo{
+font-size:16px;
+font-weight:700;
+letter-spacing:1px;
+white-space:nowrap;
+}
+
+/* TOGGLE BUTTON */
+
+#toggleBtn{
+background:#dc2626;
+border:none;
+color:#fff;
+width:32px;
+height:32px;
+border-radius:6px;
+cursor:pointer;
+transition:.3s;
+}
+
+#toggleBtn:hover{
+background:#b91c1c;
+}
+
+/* =====================================================
+   MENU
+===================================================== */
+
+.menu{
+list-style:none;
+padding:10px 0;
+flex:1;
+}
+
+.menu li{
+width:100%;
+}
+
+/* MENU LINK */
+
+.menu a,
+.submenu-toggle{
+display:flex;
+align-items:center;
+gap:14px;
+padding:13px 22px;
+width:100%;
+background:none;
+border:none;
+text-decoration:none;
+color:#d1fae5;
+cursor:pointer;
+font-size:14px;
+transition:.25s;
+}
+
+.menu a:hover,
+.submenu-toggle:hover{
+background:#166534;
+color:#fff;
+}
+
+/* ACTIVE */
+
+.menu a.active{
+background:#22c55e;
+color:#fff;
+border-left:4px solid #bbf7d0;
+}
+
+/* ICON */
+
+.menu i{
+width:20px;
+text-align:center;
+font-size:15px;
+}
+
+/* =====================================================
+   SUBMENU
+===================================================== */
+
+.submenu{
+display:none;
+flex-direction:column;
+background:#134e2f;
+}
+
+/* Pastikan ini ada di app.css Anda */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out; /* Animasi smooth */
+    display: flex; /* Ubah dari none ke flex tapi tingginya 0 */
+    flex-direction: column;
+    background: #134e2f;
+}
+
+.submenu.open {
+    max-height: 500px; /* Nilai besar agar konten terlihat */
+}
+
+/* Animasi rotasi icon */
+.arrow-icon {
+    transition: transform 0.3s ease;
+}
+.rotate {
+    transform: rotate(180deg);
+}
+
+.submenu a{
+padding:10px 20px 10px 55px;
+font-size:13px;
+color:#a7f3d0;
+text-decoration:none;
+}
+
+.submenu a:hover{
+background:#166534;
+color:#fff;
+}
+
+.arrow-icon{
+margin-left:auto;
+transition:transform .3s ease;
+}
+
+.arrow-icon.rotate{
+transform:rotate(180deg);
+}
+
+/* ARROW */
+
+.arrow-icon{
+margin-left:auto;
+transition:transform .3s ease;
+}
+
+.arrow-icon.rotate{
+transform:rotate(180deg);
+}
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.content{
+flex:1;
+margin-left:240px;
+padding:40px 50px;
+background:#f0fdf4;
+min-height:100vh;
+transition:0.3s;
+}
+
+/* CONTENT WHEN SIDEBAR COLLAPSED */
+
+.sidebar.collapsed ~ .content{
+margin-left:70px;
+}
+
+/* =====================================================
+   HOME
+===================================================== */
+
+.home-container{
+text-align:center;
+margin-top:100px;
+}
+
+.btn-belajar{
+display:inline-block;
+margin-top:25px;
+padding:12px 28px;
+background:#16a34a;
+color:#fff;
+text-decoration:none;
+border-radius:8px;
+font-size:14px;
+transition:.3s;
+}
+
+.btn-belajar:hover{
+background:#15803d;
+transform:translateY(-2px);
+}
+
+/* =====================================================
+   CARD GRID
+===================================================== */
+
+.card-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:22px;
+}
+
+.card{
+background:#fff;
+padding:25px;
+border-radius:14px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+}
+
+.card h3{
+margin-bottom:10px;
+font-size:16px;
+}
+
+.btn-card{
+display:inline-block;
+margin-top:12px;
+padding:8px 18px;
+background:#16a34a;
+color:#fff;
+border-radius:8px;
+text-decoration:none;
+font-size:13px;
+transition:.3s;
+}
+
+.btn-card:hover{
+background:#15803d;
+}
+
+/* =====================================================
+   MATERI & 3D
+===================================================== */
+
+.materi-container,
+.evaluasi-container{
+max-width:900px;
+margin:auto;
+}
+
+.model-3d-container{
+background:#fff;
+padding:22px;
+border-radius:14px;
+border:1px solid #dcfce7;
+margin-bottom:30px;
+}
+
+#model3d{
+height:320px;
+border-radius:10px;
+}
+
+/* =====================================================
+   SAINTIFIK TABS
+===================================================== */
+
+.saintifik-tabs{
+display:flex;
+gap:10px;
+margin-bottom:25px;
+}
+
+.tab-btn{
+flex:1;
+padding:12px;
+background:#16a34a;
+color:#fff;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-size:13px;
+transition:.3s;
+}
+
+.tab-btn:hover{
+background:#15803d;
+}
+
+.tab-btn.active{
+background:#14532d;
+}
+
+.step{
+display:none;
+background:#fff;
+padding:30px;
+border-radius:14px;
+border:1px solid #dcfce7;
+}
+
+/* =====================================================
+   EVALUASI
+===================================================== */
+
+.nomor-grid{
+display:grid;
+grid-template-columns:repeat(10,1fr);
+gap:6px;
+margin-bottom:20px;
+}
+
+.nomor-btn{
+padding:10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:13px;
+}
+
+.belum{
+background:#bbf7d0;
+}
+
+.sudah{
+background:#16a34a;
+color:#fff;
+}
+
+.soal-box{
+background:#fff;
+padding:25px;
+border-radius:14px;
+box-shadow:0 6px 15px rgba(0,0,0,0.05);
+margin-bottom:20px;
+}
+
+.pilihan-btn{
+display:block;
+width:100%;
+margin:8px 0;
+padding:10px;
+background:#16a34a;
+color:#fff;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:13px;
+transition:.3s;
+}
+
+.pilihan-btn:hover{
+background:#15803d;
+}
+
+.hasil-box{
+margin-top:20px;
+padding:20px;
+background:#dcfce7;
+border-radius:14px;
+}
