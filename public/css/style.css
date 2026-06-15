@@ -1,0 +1,718 @@
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0fdf4;
+    color: #1b4332;
+    line-height: 1.6;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    width: 240px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #14532d;
+    color: #ffffff;
+    overflow: hidden;
+    transition: 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar.collapsed .logo,
+.sidebar.collapsed .menu-text,
+.sidebar.collapsed .arrow-icon {
+    display: none;
+}
+
+.sidebar.collapsed .menu a,
+.sidebar.collapsed .submenu-toggle {
+    justify-content: center;
+    padding: 14px 0;
+}
+
+/* =====================================================
+   SIDEBAR HEADER
+===================================================== */
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 30px;
+    background: #14532d;
+    color: #ffffff;
+
+    font-size: 20px;
+    font-weight: 600;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+/* TOGGLE BUTTON */
+
+#toggleBtn {
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #dc2626;
+    color: #ffffff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#toggleBtn:hover {
+    background: #b91c1c;
+}
+
+/* =====================================================
+   MENU
+===================================================== */
+
+.menu {
+    flex: 1;
+    list-style: none;
+    padding: 10px 0;
+}
+
+.menu li {
+    width: 100%;
+}
+
+.menu a,
+.submenu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    width: 100%;
+    padding: 13px 22px;
+
+    border: none;
+    background: none;
+
+    color: #d1fae5;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.menu a:hover,
+.submenu-toggle:hover {
+    background: #166534;
+    color: #ffffff;
+}
+
+.menu a.active {
+    background: #22c55e;
+    color: #ffffff;
+    border-left: 4px solid #bbf7d0;
+}
+
+.menu i {
+    width: 20px;
+    text-align: center;
+    font-size: 15px;
+}
+
+/* =====================================================
+   SUBMENU
+===================================================== */
+
+.submenu {
+    display: flex;
+    flex-direction: column;
+
+    max-height: 0;
+    overflow: hidden;
+
+    background: #134e2f;
+    transition: max-height 0.3s ease-out;
+}
+
+.submenu.open {
+    max-height: 500px;
+}
+
+.submenu a {
+    padding: 10px 20px 10px 55px;
+    color: #a7f3d0;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.submenu a:hover {
+    background: #166534;
+    color: #ffffff;
+}
+
+.arrow-icon {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.arrow-icon.rotate {
+    transform: rotate(180deg);
+}
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.content {
+    flex: 1;
+    min-height: 100vh;
+
+    margin-left: 240px;
+    padding: 40px 50px;
+
+    background: #f0fdf4;
+    transition: 0.3s;
+}
+
+.sidebar.collapsed ~ .content {
+    margin-left: 70px;
+}
+
+/* =====================================================
+   HOME
+===================================================== */
+
+.home-container {
+    margin-top: 100px;
+    text-align: center;
+}
+
+.btn-belajar {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 28px;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-belajar:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+}
+
+/* =====================================================
+   CARD GRID
+===================================================== */
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+}
+
+.card {
+    padding: 25px;
+    border-radius: 14px;
+
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.btn-card {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 18px;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.btn-card:hover {
+    background: #15803d;
+}
+
+/* =====================================================
+   MATERI & 3D
+===================================================== */
+
+.materi-container,
+.evaluasi-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.model-3d-container {
+    margin-bottom: 30px;
+    padding: 22px;
+    border: 1px solid #dcfce7;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+#model3d {
+    height: 320px;
+    border-radius: 10px;
+}
+
+/* =====================================================
+   SAINTIFIK TABS
+===================================================== */
+
+.saintifik-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-btn:hover {
+    background: #15803d;
+}
+
+.tab-btn.active {
+    background: #14532d;
+}
+
+.step {
+    display: none;
+    padding: 30px;
+    border: 1px solid #dcfce7;
+    border-radius: 14px;
+    background: #ffffff;
+}
+
+/* =====================================================
+   EVALUASI
+===================================================== */
+
+.nomor-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.nomor-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.belum {
+    background: #bbf7d0;
+}
+
+.sudah {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.soal-box {
+    margin-bottom: 20px;
+    padding: 25px;
+    border-radius: 14px;
+
+    background: #ffffff;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+}
+
+.pilihan-btn {
+    display: block;
+    width: 100%;
+
+    margin: 8px 0;
+    padding: 10px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pilihan-btn:hover {
+    background: #15803d;
+}
+
+.hasil-box {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 14px;
+    background: #dcfce7;
+}
+
+/* =====================================================
+   DASHBOARD SISWA
+===================================================== */
+
+.navbar-dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 40px;
+
+    background: #14532d;
+    color: #ffffff;
+}
+
+.brand {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.btn-logout {
+    display: inline-block;
+    padding: 10px 70px;
+
+    background: #dc2626;
+    color: #ffffff;
+
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.btn-logout:hover {
+    background: #b91c1c;
+}
+
+/* =====================================================
+   HERO SECTION
+===================================================== */
+
+.hero {
+    height: 320px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-size: cover;
+    background-position: center;
+
+    color: #ffffff;
+    text-align: center;
+}
+
+.hero-overlay {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(20, 83, 45, 0.75);
+}
+
+.hero h1 {
+    margin-bottom: 10px;
+    font-size: 36px;
+}
+
+.hero p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* =====================================================
+   DASHBOARD GRID
+===================================================== */
+
+.dashboard-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 50px 20px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* =====================================================
+   DASHBOARD CARD
+===================================================== */
+
+.dashboard-card {
+    overflow: hidden;
+    border: 1px solid #bbf7d0;
+    border-radius: 16px;
+
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.10);
+}
+
+.dashboard-card img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+}
+
+.dashboard-card-body {
+    padding: 22px;
+    text-align: center;
+}
+
+.dashboard-card-body h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #14532d;
+}
+
+.dashboard-card-body p {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+/* BUTTON */
+
+.btn-dashboard {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 22px;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-dashboard:hover {
+    background: #15803d;
+}
+/* =====================================================
+    NAVBAR & FOOTER CUSTOM
+===================================================== */
+
+.navbar-dashboard, 
+.footer-dashboard {
+    background: #14532d;
+    color: #ffffff;
+    padding: 18px 30px;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.navbar-dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Penyesuaian teks di dalam Navbar */
+.brand-text h2 {
+    font-size: 20px; /* Sesuai ketentuan */
+    margin: 0;
+    line-height: 1.2;
+}
+
+.brand-text small {
+    font-size: 12px;
+    font-weight: 400;
+    display: block;
+    opacity: 0.8;
+}
+
+.user-info {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Footer Section */
+.footer-dashboard {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 14px; /* Footer biasanya teksnya lebih kecil, tapi tetap menggunakan bg & padding yang sama */
+    font-weight: 400;
+}
+
+.footer-dashboard p {
+    margin: 0;
+}
+
+/* Tombol logout agar tetap proporsional */
+.btn-logout {
+    padding: 8px 20px;
+    background: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-logout:hover {
+    background: #b91c1c;
+}
+/* Pastikan body menggunakan flex agar footer terdorong ke bawah */
+body.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 30px;
+
+    background: #14532d;
+    color: #ffffff;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.header small {
+    font-size: 12px;
+    font-weight: 400;
+    display: block;
+    opacity: 0.8;
+}
+
+.footer {
+    text-align: center;
+    padding: 15px;
+    background: #14532d;
+    color: #fff;
+    font-size: 14px;
+    margin-top: auto; /* Ini kunci agar footer tetap di bawah */
+}
+
+/* User Info Styling di Header */
+.user-area-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.btn-logout-small {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.btn-logout-small:hover {
+    background: #b91c1c;
+}

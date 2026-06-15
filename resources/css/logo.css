@@ -1,0 +1,23 @@
+.brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.brand-logo {
+    height: 40px;
+    width: auto;
+    max-width: 180px;
+    display: block;
+    object-fit: contain;
+}
+
+/* khusus sidebar */
+.sidebar-logo .brand {
+    justify-content: center;
+}
+
+.sidebar-logo .brand-logo {
+    height: 60px;
+    max-width: 190px;
+}

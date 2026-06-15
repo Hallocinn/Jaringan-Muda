@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peta Navigasi & Transit Realtime</title>
+
+<style>
+:root {
+    --sky-blue: #00a8ff;
+    --rail-blue: #0056b3;
+    --krl-red: #dc3545;
+    --walk-green: #28a745;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    margin:0;
+    background:#f1f3f6;
+    color:#333;
+}
+
+.app-container{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    background:#fff;
+    box-shadow:0 0 20px rgba(0,0,0,.1);
+    display:flex;
+    flex-direction:column;
+}
+
+/* MAP */
+.map-viewport{
+    height:320px;
+    background:#e5e9f0;
+    position:relative;
+    overflow:hidden;
+    border-bottom:2px solid #ddd;
+}
+
+.map-bg-grid{
+    position:absolute;
+    width:100%;
+    height:100%;
+    opacity:.15;
+    background-image:
+        linear-gradient(#333 1px, transparent 1px),
+        linear-gradient(90deg,#333 1px,transparent 1px);
+    background-size:20px 20px;
+}
+
+.route-line{
+    position:absolute;
+    transition:.4s ease;
+}
+
+#line-1{
+    top:70px;
+    left:10%;
+    width:25%;
+    height:6px;
+    background:var(--sky-blue);
+    transform:rotate(15deg);
+}
+
+#line-2{
+    top:90px;
+    left:34%;
+    width:35%;
+    height:6px;
+    background:var(--rail-blue);
+    transform:rotate(5deg);
+}
+
+#line-3{
+    top:100px;
+    left:68%;
+    width:20%;
+    height:6px;
+    background:var(--krl-red);
+    transform:rotate(70deg);
+}
+
+#line-4{
+    top:220px;
+    left:74%;
+    width:15%;
+    height:4px;
+    background:var(--walk-green);
+    border-top:2px dashed #fff;
+    transform:rotate(-20deg);
+}
+
+.map-pin{
+    position:absolute;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:#fff;
+    border:3px solid #333;
+    z-index:10;
+    transition:.3s;
+}
+
+.map-pin.active{
+    transform:scale(1.4);
+    box-shadow:0 0 15px rgba(0,0,0,.5);
+}
+
+#pin-cgk{
+    top:60px;
+    left:8%;
+    border-color:var(--sky-blue);
+}
+
+#pin-bst{
+    top:80px;
+    left:33%;
+    border-color:var(--rail-blue);
+}
+
+#pin-mri{
+    top:95px;
+    left:67%;
+    border-color:var(--krl-red);
+}
+
+#pin-cwg{
+    top:225px;
+    left:73%;
+    border-color:var(--krl-red);
+}
+
+#pin-spg{
+    top:210px;
+    left:88%;
+    border-color:var(--walk-green);
+    background:var(--walk-green);
+}
+
+.pin-label{
+    position:absolute;
+    top:-20px;
+    left:-20px;
+    font-size:10px;
+    white-space:nowrap;
+    background:#fff;
+    padding:2px 5px;
+    border-radius:4px;
+    font-weight:700;
+    box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+
+/* PANEL */
+.nav-panel{
+    padding:15px;
+    flex:1;
+}
+
+.nav-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:2px solid #f1f3f6;
+    padding-bottom:10px;
+    margin-bottom:15px;
+}
+
+.nav-title{
+    font-size:16px;
+    font-weight:bold;
+}
+
+.eta-badge{
+    background:#222;
+    color:#fff;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.step-card{
+    display:none;
+    animation:fadeIn .4s ease;
+}
+
+.step-card.active{
+    display:block;
+}
+
+.step-badge{
+    display:inline-block;
+    color:#fff;
+    font-size:12px;
+    font-weight:bold;
+    padding:4px 10px;
+    border-radius:5px;
+    margin-bottom:10px;
+}
+
+.instruction-text{
+    line-height:1.6;
+}
+
+.highlight-box{
+    background:#f8f9fa;
+    border-left:4px solid #333;
+    padding:12px;
+    margin-top:15px;
+    border-radius:0 8px 8px 0;
+}
+
+.highlight-box.alert{
+    background:#fff5f5;
+    border-color:var(--krl-red);
+}
+
+.highlight-box.tip{
+    background:#fffdf3;
+    border-color:#ffc107;
+}
+
+.box-title{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.btn-group{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+button{
+    flex:1;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-prev{
+    background:#e4e6eb;
+}
+
+.btn-next{
+    background:var(--rail-blue);
+    color:#fff;
+}
+
+button:disabled{
+    background:#d9d9d9;
+    color:#888;
+    cursor:not-allowed;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div class="map-viewport">
+        <div class="map-bg-grid"></div>
+
+        <div class="route-line" id="line-1"></div>
+        <div class="route-line" id="line-2"></div>
+        <div class="route-line" id="line-3"></div>
+        <div class="route-line" id="line-4"></div>
+
+        <div class="map-pin" id="pin-cgk">
+            <div class="pin-label">Bandara Soetta</div>
+        </div>
+
+        <div class="map-pin" id="pin-bst">
+            <div class="pin-label">Stn KA Bandara</div>
+        </div>
+
+        <div class="map-pin" id="pin-mri">
+            <div class="pin-label">Manggarai</div>
+        </div>
+
+        <div class="map-pin" id="pin-cwg">
+            <div class="pin-label">Cawang</div>
+        </div>
+
+        <div class="map-pin" id="pin-spg">
+            <div class="pin-label">Signature Park</div>
+        </div>
+    </div>
+
+    <div class="nav-panel">
+
+        <div class="nav-header">
+            <div class="nav-title">Panduan Navigasi Transit</div>
+            <div class="eta-badge" id="eta-display">±75 Menit</div>
+        </div>
+
+        <div class="step-card active" id="step-0">
+            <span class="step-badge" style="background:var(--sky-blue)">
+                Langkah 1 dari 4
+            </span>
+
+            <div class="instruction-text">
+                Keluar dari terminal kedatangan bandara, ikuti plang
+                logo kereta/Kalayang. Naik <b>Skytrain (Kalayang)</b>
+                gratis menuju Stasiun KA Bandara Soekarno-Hatta.
+            </div>
+
+            <div class="highlight-box">
+                <div class="box-title">🔄 Status Jalur</div>
+                Garis biru muda pada peta aktif.
+            </div>
+        </div>
+
+        <div class="step-card" id="step-1">
+            <span class="step-badge" style="background:var(--rail-blue)">
+                Langkah 2 dari 4
+            </span>
+
+            <div class="instruction-text">
+                Beli tiket KA Bandara tujuan
+                <b>Manggarai</b> sekitar Rp70.000.
+            </div>
+
+            <div class="highlight-box alert">
+                <div class="box-title">⚠️ Info Penting</div>
+                Tetap di kereta sampai Stasiun Manggarai.
+            </div>
+        </div>
+
+        <div class="step-card" id="step-2">
+            <span class="step-badge" style="background:var(--krl-red)">
+                Langkah 3 dari 4
+            </span>
+
+            <div class="instruction-text">
+                Transit ke KRL arah Depok/Bogor dan masuk ke
+                gerbong 2 atau 3 dari depan.
+            </div>
+
+            <div class="highlight-box tip">
+                <div class="box-title">💡 Tips</div>
+                Posisi tersebut paling dekat dengan akses keluar
+                Stasiun Cawang.
+            </div>
+        </div>
+
+        <div class="step-card" id="step-3">
+            <span class="step-badge" style="background:var(--walk-green)">
+                Langkah 4 dari 4
+            </span>
+
+            <div class="instruction-text">
+                Turun di Stasiun Cawang dan lanjut ke
+                Signature Park Grande.
+            </div>
+
+            <div class="highlight-box">
+                <div class="box-title">📍 Tujuan</div>
+                Jalan kaki ±700 meter atau naik ojek online.
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button id="prev-btn" class="btn-prev" onclick="changeStep(-1)" disabled>
+                Kembali
+            </button>
+
+            <button id="next-btn" class="btn-next" onclick="changeStep(1)">
+                Lanjut Arah
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+let currentStep = 0;
+const totalSteps = 4;
+
+const etas = [
+    "±75 Menit",
+    "±65 Menit",
+    "±15 Menit",
+    "±5 Menit"
+];
+
+function updateMapVisuals(step){
+
+    document
+        .querySelectorAll('.map-pin')
+        .forEach(pin => pin.classList.remove('active'));
+
+    document.getElementById('line-1').style.opacity = step >= 0 ? 1 : 0.2;
+    document.getElementById('line-2').style.opacity = step >= 1 ? 1 : 0.2;
+    document.getElementById('line-3').style.opacity = step >= 2 ? 1 : 0.2;
+    document.getElementById('line-4').style.opacity = step >= 3 ? 1 : 0.2;
+
+    if(step === 0){
+        document.getElementById('pin-cgk').classList.add('active');
+    }
+
+    if(step === 1){
+        document.getElementById('pin-bst').classList.add('active');
+    }
+
+    if(step === 2){
+        document.getElementById('pin-mri').classList.add('active');
+    }
+
+    if(step === 3){
+        document.getElementById('pin-cwg').classList.add('active');
+        document.getElementById('pin-spg').classList.add('active');
+    }
+
+    document.getElementById('eta-display').innerText = etas[step];
+}
+
+function changeStep(direction){
+
+    document
+        .getElementById(`step-${currentStep}`)
+        .classList.remove('active');
+
+    currentStep += direction;
+
+    document
+        .getElementById(`step-${currentStep}`)
+        .classList.add('active');
+
+    document.getElementById('prev-btn').disabled = currentStep === 0;
+
+    if(currentStep === totalSteps - 1){
+        document.getElementById('next-btn').innerText = 'Selesai';
+        document.getElementById('next-btn').disabled = true;
+    } else {
+        document.getElementById('next-btn').innerText = 'Lanjut Arah';
+        document.getElementById('next-btn').disabled = false;
+    }
+
+    updateMapVisuals(currentStep);
+}
+
+updateMapVisuals(0);
+</script>
+
+</body>
+</html>

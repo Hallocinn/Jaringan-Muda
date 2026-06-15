@@ -1,5 +1,10 @@
+/* =============================
+   IMPORT
+============================= */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 
 /* =============================
    INIT SEMUA SETELAH DOM READY
@@ -9,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initSidebar();
     initSubmenu();
     initActiveMenu();
-    initThreeJS(); // 🔥 3D dipanggil di sini
+    initThreeJS();
 
 });
 
@@ -23,16 +28,22 @@ function initSidebar() {
     const toggleBtn = document.getElementById("toggleBtn");
 
     if (toggleBtn && sidebar) {
+
         toggleBtn.addEventListener("click", function () {
 
             sidebar.classList.toggle("collapsed");
 
             if (sidebar.classList.contains("collapsed")) {
-                document.querySelectorAll(".submenu").forEach(el => el.classList.remove("open"));
-                document.querySelectorAll(".arrow-icon").forEach(el => el.classList.remove("rotate"));
+
+                document.querySelectorAll(".submenu")
+                    .forEach(el => el.classList.remove("open"));
+
+                document.querySelectorAll(".arrow-icon")
+                    .forEach(el => el.classList.remove("rotate"));
             }
 
         });
+
     }
 
 }
@@ -84,8 +95,11 @@ function initActiveMenu() {
         parentSubmenu.classList.add("open");
 
         if (parentBtn) {
+
             const arrow = parentBtn.querySelector(".arrow-icon");
+
             if (arrow) arrow.classList.add("rotate");
+
         }
 
     }
@@ -100,12 +114,16 @@ window.completedSteps = new Set();
 
 window.showStep = function(step, btn) {
 
-    document.querySelectorAll('.step').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.step')
+        .forEach(el => el.style.display = 'none');
 
     const target = document.getElementById('step' + step);
+
     if (target) target.style.display = 'block';
 
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn')
+        .forEach(el => el.classList.remove('active'));
+
     if (btn) btn.classList.add('active');
 
     window.completedSteps.add(step);
@@ -113,12 +131,14 @@ window.showStep = function(step, btn) {
     const kuisBtn = document.getElementById('kuisBtn');
 
     if (kuisBtn && window.completedSteps.size === 5) {
+
         kuisBtn.disabled = false;
         kuisBtn.innerHTML = "✅ Buka Kuis Sekarang";
         kuisBtn.style.opacity = "1";
         kuisBtn.style.cursor = "pointer";
         kuisBtn.style.background = "#16a34a";
         kuisBtn.style.color = "#fff";
+
     }
 
 };
@@ -137,82 +157,22 @@ window.toggleReaction = function(btn) {
     btn.classList.toggle('active');
 
     if (btn.classList.contains('active')) {
+
         span.innerText = count + 1;
         icon.classList.replace('fa-regular', 'fa-solid');
+
     } else {
+
         span.innerText = count - 1;
         icon.classList.replace('fa-solid', 'fa-regular');
+
     }
 
 };
 
 
 /* =============================
-   6. THREE JS (3D MODEL)
-============================= */
-function initThreeJS() {
-
-    const container = document.getElementById('model3d');
-
-    if (!container) return; // 🔥 biar tidak error di halaman lain
-
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
-
-    const camera = new THREE.PerspectiveCamera(
-        75,
-        container.clientWidth / 400,
-        0.1,
-        1000
-    );
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, 400);
-    container.appendChild(renderer.domElement);
-
-    // Lighting
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5);
-    scene.add(light);
-
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambient);
-
-    // Load Model
-    const loader = new GLTFLoader();
-    loader.load(
-        '/models/model-jaringan.glb',
-        function (gltf) {
-            scene.add(gltf.scene);
-        },
-        undefined,
-        function (error) {
-            console.error('Error loading model:', error);
-        }
-    );
-
-    camera.position.z = 5;
-
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-    }
-
-    animate();
-}
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
-/* =============================
-   INIT SEMUA
-============================= */
-document.addEventListener("DOMContentLoaded", function () {
-    initThreeJS();
-});
-
-/* =============================
-   THREE JS
+   6. THREE JS (MODEL 3D)
 ============================= */
 function initThreeJS() {
 
@@ -223,6 +183,7 @@ function initThreeJS() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f0f0);
 
+
     const camera = new THREE.PerspectiveCamera(
         75,
         container.clientWidth / 400,
@@ -230,56 +191,171 @@ function initThreeJS() {
         1000
     );
 
+
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+
     renderer.setSize(container.clientWidth, 400);
     renderer.setPixelRatio(window.devicePixelRatio);
+
     container.appendChild(renderer.domElement);
 
-    // 🔥 CONTROL (bisa diputar pakai mouse)
-    const controls = new OrbitControls(camera, renderer.domElement);
 
-    // LIGHTING
+    /* ===== CONTROL MOUSE ===== */
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+
+    /* ===== LIGHT ===== */
     const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5);
+    light.position.set(5,5,5);
     scene.add(light);
 
     const ambient = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambient);
 
-    // LOAD MODEL
+
+    /* ===== LOAD MODEL ===== */
     const loader = new GLTFLoader();
+
     loader.load(
+
         '/models/melati.glb',
+
         function (gltf) {
 
             const model = gltf.scene;
 
-            // 🔥 BIAR MODEL TERLIHAT JELAS
-            model.scale.set(1, 1, 1);
-            model.position.set(0, 0, 0);
+            model.scale.set(1,1,1);
+            model.position.set(0,0,0);
 
             scene.add(model);
+
         },
+
         undefined,
+
         function (error) {
-            console.error('Gagal load model:', error);
+
+            console.error("Model gagal dimuat:", error);
+
         }
+
     );
 
-    camera.position.set(0, 1, 5);
 
+    camera.position.set(0,1,5);
+
+
+    /* ===== ANIMATION LOOP ===== */
     function animate() {
+
         requestAnimationFrame(animate);
+
         controls.update();
         renderer.render(scene, camera);
+
     }
 
     animate();
 
-    // 🔥 RESPONSIVE
+
+    /* ===== RESPONSIVE ===== */
     window.addEventListener('resize', function () {
-        camera.aspect = container.clientWidth / 400;
+
+        camera.aspect = container.clientWidth / 500;
         camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, 400);
+
+        renderer.setSize(container.clientWidth, 500);
+
+    });
+
+}
+
+let dataSiswa = [
+    {nama:"Andi", kelas:"X IPA", nilai:80},
+    {nama:"Budi", kelas:"XI IPA", nilai:75},
+];
+
+let editIndex = null;
+
+function renderTable(){
+    const tbody = document.querySelector("#tabelSiswa tbody");
+    const filter = document.getElementById("filterKelas").value;
+
+    tbody.innerHTML = "";
+
+    dataSiswa.forEach((siswa, i)=>{
+        if(filter && siswa.kelas !== filter) return;
+
+        tbody.innerHTML += `
+        <tr>
+            <td>${siswa.nama}</td>
+            <td>${siswa.kelas}</td>
+            <td>${siswa.nilai}</td>
+            <td>
+                <button class="btn btn-success" onclick="editData(${i})">Edit</button>
+                <button class="btn btn-danger" onclick="hapusData(${i})">Hapus</button>
+            </td>
+        </tr>`;
     });
 }
+
+/* MODAL */
+function openForm(){
+    document.getElementById("modalForm").style.display="flex";
+    document.getElementById("formTitle").innerText="Tambah Siswa";
+    document.getElementById("nama").value="";
+    document.getElementById("kelas").value="";
+    document.getElementById("nilai").value="";
+    editIndex=null;
+}
+
+function tutupForm(){
+    document.getElementById("modalForm").style.display="none";
+}
+
+/* SIMPAN */
+function simpanData(){
+    const nama = document.getElementById("nama").value;
+    const kelas = document.getElementById("kelas").value;
+    const nilai = document.getElementById("nilai").value;
+
+    if(!nama || !kelas || !nilai) return alert("Isi semua!");
+
+    if(editIndex !== null){
+        dataSiswa[editIndex] = {nama, kelas, nilai};
+    }else{
+        dataSiswa.push({nama, kelas, nilai});
+    }
+
+    tutupForm();
+    renderTable();
+}
+
+/* EDIT */
+function editData(i){
+    const s = dataSiswa[i];
+    document.getElementById("modalForm").style.display="flex";
+
+    document.getElementById("formTitle").innerText="Edit Siswa";
+    document.getElementById("nama").value=s.nama;
+    document.getElementById("kelas").value=s.kelas;
+    document.getElementById("nilai").value=s.nilai;
+
+    editIndex=i;
+}
+
+/* HAPUS */
+function hapusData(i){
+    if(confirm("Hapus data?")){
+        dataSiswa.splice(i,1);
+        renderTable();
+    }
+}
+
+/* FILTER */
+document.addEventListener("DOMContentLoaded", ()=>{
+    renderTable();
+    document.getElementById("filterKelas").addEventListener("change", renderTable);
+});
+
