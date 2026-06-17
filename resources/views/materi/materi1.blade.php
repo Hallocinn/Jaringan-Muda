@@ -75,19 +75,124 @@
     .intro-card .icon-circle { width: 50px; height: 50px; background: #ecfdf5; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
     .intro-card .icon-circle i { font-size: 24px; color: var(--primary); }
     
-    .model-3d-container { position: relative; height: 10px; background: #0f172a; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .btn-fullscreen { position: absolute; bottom: 33px; right: 30px; background: #f59e0b; color: #0f172a; border: none; padding: 6px 14px; border-radius: 10px; cursor: pointer; font-size: var(--fs-button-small); font-weight: var(--fw-medium); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4); z-index: 10; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
-    .btn-fullscreen:hover { background: #d97706; transform: scale(1.03); }
+    /* ================= MODEL 3D ================= */
+    .model-section {
+        position: relative;
+    }
 
-    /* PENDUKUNG FALLBACK: Jika sistem HTML5 API Browser gagal, class ini menjamin layar penuh melalui CSS */
-    .model-3d-container.is-fullscreen {
+    .model-3d-container {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        background: #0f172a;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .viewer-box {
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: #0f172a;
+    }
+
+    .model-caption {
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .btn-fullscreen {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        background: #f59e0b;
+        color: #0f172a;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: var(--fs-button-small);
+        font-weight: var(--fw-medium);
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+        z-index: 20;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-fullscreen:hover {
+        background: #d97706;
+        transform: scale(1.03);
+    }
+
+    /* ================= FULLSCREEN MODEL 3D FIX ================= */
+    html.model3d-lock,
+    body.model3d-lock {
+        overflow: hidden !important;
+    }
+
+    #modelSection3D.is-fullscreen {
         position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
+        inset: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        z-index: 999999 !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        border: none !important;
         border-radius: 0 !important;
+        background: #0f172a !important;
+        z-index: 2147483647 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    #modelSection3D.is-fullscreen .model-3d-container {
+        flex: 1 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        border-radius: 12px !important;
+        background: #0f172a !important;
+    }
+
+    #modelSection3D.is-fullscreen .viewer-box {
+        width: 100% !important;
+        height: 100% !important;
+        background: #0f172a !important;
+    }
+
+    #modelSection3D.is-fullscreen .model-caption {
+        color: #ffffff !important;
+        margin-top: 12px !important;
+        padding: 8px 14px !important;
+        border-radius: 10px !important;
+        background: rgba(15, 23, 42, 0.85) !important;
+    }
+
+    #modelSection3D.is-fullscreen .btn-fullscreen {
+        position: absolute !important;
+        right: 24px !important;
+        bottom: 24px !important;
+        z-index: 2147483647 !important;
+    }
+
+    @media (max-width: 700px) {
+        .model-3d-container {
+            height: 360px;
+        }
+
+        .btn-fullscreen {
+            bottom: 16px;
+            right: 16px;
+            padding: 7px 12px;
+        }
     }
 
     /* Chat UI */
@@ -213,6 +318,55 @@
         padding-left: 22px;
         line-height: 1.8;
     }
+    .plant-image-box {
+        width: 100%;
+        text-align: center;
+    }
+
+    .plant-identification-img {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        background: #ffffff;
+    }
+
+    .image-caption {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        text-align: center;
+    }
+
+    .info-identifikasi {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+    }
+
+    .info-identifikasi h4 {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #14532d;
+    }
+
+    .info-identifikasi p {
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #475569;
+        text-align: justify;
+    }
+
+    .info-identifikasi p:last-child {
+        margin-bottom: 0;
+    }
 </style>
 
 <div class="materi-wrapper">
@@ -241,14 +395,22 @@
         </ol>
     </div>
     {{-- ================= AREA MODEL 3D ================= --}}
-    <div class="model-section card">
+    <div id="modelSection3D" class="model-section card">
         <div id="container3D" class="model-3d-container">
-            <div id="model3d" class="viewer-box"></div> 
-            
-            <button id="fullscreenBtn" class="btn-fullscreen" onclick="toggleFullscreen()">
+            <div
+                id="model3d"
+                class="viewer-box"
+                data-model="{{ asset('models/bunga-sepatu.glb') }}">
+            </div>
+
+            <button type="button" id="fullscreenBtn" class="btn-fullscreen">
                 <i class="fas fa-expand"></i> Layar Penuh
             </button>
         </div>
+
+        <p class="model-caption" style="font-weight: 600 !important; font-size: 15px !important;">
+           Model 3D Bunga sepatu
+        </p>
     </div>
 
     {{-- ================= NAVIGASI TABS ================= --}}
@@ -371,47 +533,77 @@
             </div>
         </div>
 
-        {{-- STEP 3: MENCOBA --}}
+       {{-- STEP 3: MENCOBA --}}
         <div class="step-content" id="step3" style="display:none;">
             <div class="card intro-card">
                 <h3><i class="fas fa-search"></i> Petunjuk Aktivitas</h3>
-                <p>Amatilah gambar struktur jaringan meristem pada tabel berikut:</p>
+                <p>Amatilah gambar tanaman bunga sepatu berikut dengan saksama.</p>
+
                 <ol>
-                    <li>Amatilah model 3D yang ada dibawah ini dengan saksama dan perhatikan nomor-nomor yang menjadi penanda bagian-bagian tertentu.</li>
-                    <li>Bacalah penjelasan yang tersedia pada setiap bagian dengan cermat.</li>
-                    <li>Tentukan dan pilih nomor yang paling sesuai dengan penjelasan yang diberikan.</li>
-                    <li>Setelah semua jawaban terisi, klik tombol <strong>Periksa Jawaban</strong> untuk memeriksa ketepatan hasil identifikasimu.</li>
-                    <li>Pelajari kembali informasi pada bagian yang belum tepat berdasarkan hasil yang diperoleh.</li>
+                    <li>Perhatikan nomor 1, 2, dan 3 yang menjadi penanda bagian tumbuhan.</li>
+                    <li>Bacalah penjelasan pada bagian bawah gambar dan identifikasi dengan cermat.</li>
+                    <li>Tentukan nomor yang sesuai dengan pernyataan yang diberikan.</li>
+                    <li>Isikan nomor pada kotak jawaban sesuai hasil pengamatanmu.</li>
+                    <li>Klik tombol <strong>Periksa Jawaban</strong> untuk memeriksa ketepatan hasil identifikasi.</li>
                 </ol>
             </div>
+
             <div class="matching-grid">
                 <div class="card visual-card">
-                    <div class="placeholder-label-img">
-                        <div class="node n1">1</div>
-                        <div class="node n2">2</div>
-                        <div class="node n3">3</div>
-                        <p>Diagram Struktur Akar</p>
+                    <div class="plant-image-box">
+                        <img 
+                            src="{{ asset('images/mencoba1.jpg') }}" 
+                            alt="Gambar bunga sepatu dengan penanda bagian tumbuhan"
+                            class="plant-identification-img"
+                        >
+
+                        <p class="image-caption">
+                            Gambar bunga melati dengan penanda bagian pertumbuhan tumbuhan
+                        </p>
                     </div>
                 </div>
+
                 <div class="card quiz-card">
                     <h4>Identifikasi Bagian</h4>
+
                     <div class="match-list">
                         <div class="match-row">
-                            <label>Meristem Apikal</label>
-                            <input type="number" class="match-input" data-answer="1" placeholder="?">
+                            <label>Meristem akar</label>
+                            <input type="number" class="match-input" data-answer="3" min="1" max="3" placeholder="?">
                         </div>
+
                         <div class="match-row">
-                            <label>Zona Elongasi</label>
-                            <input type="number" class="match-input" data-answer="2" placeholder="?">
+                            <label>Meristem pucuk</label>
+                            <input type="number" class="match-input" data-answer="1" min="1" max="3" placeholder="?">
                         </div>
+
                         <div class="match-row">
-                            <label>Zona Maturasi</label>
-                            <input type="number" class="match-input" data-answer="3" placeholder="?">
+                            <label>Meristem Vaskular</label>
+                            <input type="number" class="match-input" data-answer="2" min="1" max="3" placeholder="?">
                         </div>
+                    </div>
+                    <div class="info-identifikasi">
+                        <h4>Keterangan Penanda</h4>
+
+                        <p>
+                            <strong>Nomor 1</strong> menunjukkan bagian ujung batang atau pucuk tanaman. 
+                            Bagian ini berperan dalam pertumbuhan primer sehingga tanaman dapat bertambah tinggi.
+                        </p>
+
+                        <p>
+                            <strong>Nomor 2</strong> menunjukkan bagian batang. 
+                            Pada bagian ini terdapat jaringan yang berperan dalam pertumbuhan sekunder sehingga batang dapat bertambah tebal.
+                        </p>
+
+                        <p>
+                            <strong>Nomor 3</strong> menunjukkan bagian akar. 
+                            Bagian ujung akar mengalami pertumbuhan primer sehingga akar dapat bertambah panjang.
+                        </p>
                     </div>
                     <button class="btn-check-materi" onclick="checkMatching()">
                         <i class="fas fa-check-circle"></i> Periksa Jawaban
                     </button>
+
                     <div id="feedback-mencoba" style="margin-top: 15px; font-weight: 600; display: none;"></div>
                 </div>
             </div>
@@ -897,30 +1089,204 @@
 
     // --- INITIALIZATION ---
     setInterval(loadMessages, 3000);
-    window.onload = () => {
+
+    window.addEventListener('load', function () {
         switchStep(1);
         loadMessages();
-    };
-        // --- FULLSCREEN LOGIC ---
-    function toggleFullscreen() {
-        const e = document.getElementById('container3D');
-        const btnIcon = document.querySelector('#fullscreenBtn i');
-        const btnText = document.querySelector('#fullscreenBtn');
-
-        if (!document.fullscreenElement) {
-            if (e.requestFullscreen) e.requestFullscreen();
-            btnIcon.className = 'fas fa-compress';
-            btnText.innerHTML = '<i class="fas fa-compress"></i> Perkecil Layar';
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-        }
-    }
-
-    document.addEventListener('fullscreenchange', () => {
-        const btnText = document.querySelector('#fullscreenBtn');
-        if (!document.fullscreenElement) {
-            btnText.innerHTML = '<i class="fas fa-expand"></i> Layar Penuh';
-        }
     });
+
+    // ==========================================================
+    // FULLSCREEN LOGIC MODEL 3D - API BROWSER + FALLBACK CSS
+    // ==========================================================
+    (function () {
+        let placeholder = null;
+        let originalParent = null;
+
+        function getSection() {
+            return document.getElementById('modelSection3D');
+        }
+
+        function getButton() {
+            return document.getElementById('fullscreenBtn');
+        }
+
+        function getModel() {
+            return document.getElementById('model3d');
+        }
+
+        function isNativeFullscreen() {
+            return document.fullscreenElement ||
+                   document.webkitFullscreenElement ||
+                   document.msFullscreenElement;
+        }
+
+        function updateButton(active) {
+            const btn = getButton();
+            if (!btn) return;
+
+            btn.innerHTML = active
+                ? '<i class="fas fa-compress"></i> Perkecil Layar'
+                : '<i class="fas fa-expand"></i> Layar Penuh';
+        }
+
+        function refreshModel() {
+            const model = getModel();
+
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+
+                if (model && typeof model.updateFraming === 'function') {
+                    model.updateFraming();
+                }
+
+                if (model && typeof model.jumpCameraToGoal === 'function') {
+                    model.jumpCameraToGoal();
+                }
+            }, 200);
+        }
+
+        function moveSectionToBody() {
+            const section = getSection();
+            if (!section || placeholder) return;
+
+            originalParent = section.parentNode;
+            placeholder = document.createComment('model-3d-placeholder');
+            originalParent.insertBefore(placeholder, section);
+
+            document.body.appendChild(section);
+        }
+
+        function restoreSectionPosition() {
+            const section = getSection();
+
+            if (!section || !placeholder || !originalParent) return;
+
+            originalParent.insertBefore(section, placeholder);
+            placeholder.remove();
+
+            placeholder = null;
+            originalParent = null;
+        }
+
+        async function openFullscreen() {
+            const section = getSection();
+            if (!section) return;
+
+            moveSectionToBody();
+
+            section.classList.add('is-fullscreen');
+            document.documentElement.classList.add('model3d-lock');
+            document.body.classList.add('model3d-lock');
+
+            updateButton(true);
+            refreshModel();
+
+            const requestFullscreen =
+                section.requestFullscreen ||
+                section.webkitRequestFullscreen ||
+                section.msRequestFullscreen;
+
+            if (requestFullscreen) {
+                try {
+                    await requestFullscreen.call(section);
+                } catch (error) {
+                    console.warn('Browser menolak Fullscreen API, memakai CSS fullscreen.');
+                }
+            }
+
+            refreshModel();
+        }
+
+        async function closeFullscreen() {
+            const section = getSection();
+            if (!section) return;
+
+            const exitFullscreen =
+                document.exitFullscreen ||
+                document.webkitExitFullscreen ||
+                document.msExitFullscreen;
+
+            if (isNativeFullscreen() && exitFullscreen) {
+                try {
+                    await exitFullscreen.call(document);
+                } catch (error) {
+                    console.warn('Gagal keluar dari fullscreen browser.');
+                }
+            }
+
+            section.classList.remove('is-fullscreen');
+            document.documentElement.classList.remove('model3d-lock');
+            document.body.classList.remove('model3d-lock');
+
+            updateButton(false);
+            restoreSectionPosition();
+            refreshModel();
+        }
+
+        function toggleFullscreen(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            const section = getSection();
+            if (!section) return;
+
+            if (section.classList.contains('is-fullscreen')) {
+                closeFullscreen();
+            } else {
+                openFullscreen();
+            }
+        }
+
+        function initFullscreen() {
+            const btn = getButton();
+            if (!btn) return;
+
+            btn.addEventListener('click', toggleFullscreen);
+
+            document.addEventListener('fullscreenchange', function () {
+                const section = getSection();
+                if (!section) return;
+
+                if (!document.fullscreenElement && section.classList.contains('is-fullscreen')) {
+                    section.classList.remove('is-fullscreen');
+                    document.documentElement.classList.remove('model3d-lock');
+                    document.body.classList.remove('model3d-lock');
+                    updateButton(false);
+                    restoreSectionPosition();
+                    refreshModel();
+                }
+            });
+
+            document.addEventListener('webkitfullscreenchange', function () {
+                const section = getSection();
+                if (!section) return;
+
+                if (!document.webkitFullscreenElement && section.classList.contains('is-fullscreen')) {
+                    section.classList.remove('is-fullscreen');
+                    document.documentElement.classList.remove('model3d-lock');
+                    document.body.classList.remove('model3d-lock');
+                    updateButton(false);
+                    restoreSectionPosition();
+                    refreshModel();
+                }
+            });
+
+            document.addEventListener('keydown', function (event) {
+                const section = getSection();
+
+                if (event.key === 'Escape' && section && section.classList.contains('is-fullscreen')) {
+                    closeFullscreen();
+                }
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initFullscreen);
+        } else {
+            initFullscreen();
+        }
+    })();
 </script>
 @endsection

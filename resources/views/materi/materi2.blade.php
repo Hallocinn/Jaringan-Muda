@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
     /* ============================================
@@ -213,6 +214,275 @@
         padding-left: 22px;
         line-height: 1.8;
     }
+    /* ================= MODEL 3D SESUAI SKETSA ================= */
+    .model-section {
+        position: relative;
+    }
+
+    .model-3d-container {
+        position: relative;
+        width: 100%;
+        height: 520px;
+        background: #0f172a !important;
+        background-color: #0f172a !important;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .viewer-box,
+    model-viewer.viewer-box,
+    #model3d {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+        background: #0f172a !important;
+        background-color: #0f172a !important;
+        --poster-color: #0f172a !important;
+        --progress-bar-color: #f59e0b !important;
+        --progress-mask: #0f172a !important;
+        color: #ffffff !important;
+    }
+
+    #model3d:not(:defined) {
+        background: #0f172a !important;
+        background-color: #0f172a !important;
+    }
+
+    #model3d::part(default-progress-bar) {
+        background-color: #f59e0b !important;
+    }
+
+    #model3d::part(default-progress-mask) {
+        background-color: #0f172a !important;
+    }
+
+    .btn-fullscreen {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        background: #f59e0b;
+        color: #0f172a;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+        z-index: 20;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-fullscreen:hover {
+        background: #d97706;
+        transform: scale(1.03);
+    }
+
+    .model-bottom-panel {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .model-caption-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .model-number-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .model-number-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid #14532d;
+        background: white;
+        color: #14532d;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .model-number-btn:hover {
+        background: #dcfce7;
+        transform: scale(1.08);
+    }
+
+    .model-number-btn.active {
+        background: #14532d;
+        color: white;
+        box-shadow: 0 4px 10px rgba(20, 83, 45, 0.3);
+    }
+
+    .model-section:fullscreen,
+    .model-section:-webkit-full-screen {
+        width: 100vw !important;
+        height: 100vh !important;
+        background: #0f172a !important;
+        padding: 20px !important;
+        border-radius: 0 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .model-section:fullscreen .model-3d-container,
+    .model-section:-webkit-full-screen .model-3d-container {
+        flex: 1 !important;
+        height: auto !important;
+        border-radius: 12px !important;
+        background: #0f172a !important;
+        background-color: #0f172a !important;
+    }
+
+    .model-section:fullscreen .viewer-box,
+    .model-section:-webkit-full-screen .viewer-box {
+        width: 100% !important;
+        height: 100% !important;
+        background: #0f172a !important;
+        background-color: #0f172a !important;
+        --poster-color: #0f172a !important;
+    }
+
+    .model-section:fullscreen .model-caption-text,
+    .model-section:-webkit-full-screen .model-caption-text {
+        color: white !important;
+    }
+
+    @media (max-width: 700px) {
+        .model-3d-container {
+            height: 360px;
+        }
+
+        .btn-fullscreen {
+            bottom: 16px;
+            right: 16px;
+            padding: 7px 12px;
+        }
+
+        .model-number-btn {
+            width: 30px;
+            height: 30px;
+            font-size: 13px;
+        }
+
+        .model-number-controls {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    
+
+    .plant-identification-img {
+        width: 100%;
+        max-width: 720px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        background: #ffffff;
+    }
+
+    .image-caption {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        text-align: center;
+    }
+
+    .info-identifikasi {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+    }
+
+    .info-identifikasi h4 {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #14532d;
+    }
+
+    .info-identifikasi p {
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #475569;
+        text-align: justify;
+    }
+
+    .info-identifikasi p:last-child {
+        margin-bottom: 0;
+    }
+    .plant-image-box {
+        width: 100%;
+        text-align: center;
+    }
+
+    .plant-identification-img {
+        width: 100%;
+        max-width: 720px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        background: #ffffff;
+    }
+
+    .image-caption {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        text-align: center;
+    }
+
+    .info-identifikasi {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+    }
+
+    .info-identifikasi h4 {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #14532d;
+    }
+
+    .info-identifikasi p {
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #475569;
+        text-align: justify;
+    }
+
+    .info-identifikasi p:last-child {
+        margin-bottom: 0;
+    }
 </style>
 
 <div class="materi-wrapper">
@@ -242,15 +512,84 @@
     </div>
 
     {{-- ================= AREA MODEL 3D ================= --}}
-    <div class="model-section card">
+    @php
+        $models3D = [
+            [
+                'src' => asset('models/melati.glb'),
+                'caption' => 'Model 3D Tanaman Melati (belum tersedia)'
+            ],
+            [
+                'src' => asset('models/ujung-batang.glb'),
+                'caption' => 'Model 3D Detail Ujung Batang - Meristem Apikal (belum tersedia)'
+            ],
+            [
+                'src' => asset('models/ujung-akar.glb'),
+                'caption' => 'Model 3D Detail Ujung Akar - Meristem Apikal (belum tersedia)'
+            ],
+            [
+                'src' => asset('models/pohon-mangga.glb'),
+                'caption' => 'Model 3D Pohon Mangga'
+            ],
+            [
+                'src' => asset('models/detail-pohon.glb'),
+                'caption' => 'Model 3D Detail Pohon Mangga - Meristem Lateral'
+            ],
+            [
+                'src' => asset('models/tebu.glb'),
+                'caption' => 'Model 3D Tanaman Tebu'
+            ],
+            [
+                'src' => asset('models/detail-tebu.glb'),
+                'caption' => 'Model 3D Detail Pangkal Ruas Tebu - Meristem Interkalar'
+            ],
+        ];
+    @endphp
+
+    <div id="modelSection3D" class="model-section card">
         <div id="container3D" class="model-3d-container">
-            <div id="model3d" class="viewer-box"></div>
-            <button id="fullscreenBtn" class="btn-fullscreen" onclick="toggleFullscreen()">
+            <model-viewer
+                id="model3d"
+                class="viewer-box"
+                src="{{ $models3D[0]['src'] }}"
+                alt="{{ $models3D[0]['caption'] }}"
+                camera-controls
+                auto-rotate
+                camera-orbit="0deg 65deg 120%"
+                field-of-view="45deg"
+                min-camera-orbit="auto auto 30%"
+                max-camera-orbit="auto auto 400%"
+                shadow-intensity="1"
+                exposure="1"
+                interaction-prompt="none"
+                reveal="auto"
+                poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'%3E%3Crect width='1200' height='700' fill='%230f172a'/%3E%3C/svg%3E"
+                style="width: 100%; height: 100%; background: #0f172a; background-color: #0f172a; --poster-color: #0f172a; --progress-mask: #0f172a; --progress-bar-color: #f59e0b; color: #ffffff;">
+            </model-viewer>
+
+            <button type="button" id="fullscreenBtn" class="btn-fullscreen" onclick="toggleFullscreen(this)">
                 <i class="fas fa-expand"></i> Layar Penuh
             </button>
         </div>
-    </div>
 
+        <div class="model-bottom-panel">
+            <div class="model-caption-text" data-model-caption>
+                {{ $models3D[0]['caption'] }}
+            </div>
+
+            <div class="model-number-controls">
+                @foreach ($models3D as $index => $model)
+                    <button
+                        type="button"
+                        class="model-number-btn {{ $index === 0 ? 'active' : '' }}"
+                        data-model-src="{{ $model['src'] }}"
+                        data-model-caption="{{ $model['caption'] }}"
+                        onclick="switchModel3D(this)">
+                        {{ $index + 1 }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
+    </div>
     {{-- ================= NAVIGASI TABS ================= --}}
     <nav class="saintifik-nav">
         <button class="nav-item active" id="btn-step1" onclick="switchStep(1)">
@@ -309,7 +648,7 @@
 
                 <h4>1. Meristem Apikal</h4>
                 <p>
-                    Meristem apikal adalah jaringan meristem yang terletak di ujung batang dan ujung akar. Meristem ini berperan dalam pertumbuhan primer, yaitu pertumbuhan yang menyebabkan tanaman bertambah panjang atau tinggi. Perhatikan model 3D untuk melihat letak meristem apikal pada bagian ujung batang dan ujung akar tumbuhan.
+                    Meristem apikal adalah jaringan meristem yang terletak di ujung batang dan ujung akar. Meristem ini berperan dalam pertumbuhan primer, yaitu pertumbuhan yang menyebabkan tanaman bertambah panjang atau tinggi. Amati model 3D Tanaman Melati, Detail Ujung Batang, dan Detail Ujung Akar untuk melihat letak meristem apikal pada bagian ujung batang dan ujung akar tumbuhan.
                 </p>
 
                 <p>
@@ -318,28 +657,20 @@
 
                 <h4>2. Meristem Lateral</h4>
                 <p>
-                    Meristem lateral adalah jaringan meristem yang terletak di sisi batang dan akar. Meristem ini berperan dalam pertumbuhan sekunder, yaitu pertumbuhan yang menyebabkan batang dan akar menjadi lebih besar atau menebal. Pertumbuhan sekunder terjadi karena sel-sel pada meristem lateral terus membelah sehingga menghasilkan sel-sel baru yang menambah diameter batang dan akar. Contoh meristem lateral adalah kambium vaskular dan kambium gabus.
+                    Meristem lateral adalah jaringan meristem yang terletak di sisi batang dan akar. Meristem ini berperan dalam pertumbuhan sekunder, yaitu pertumbuhan yang menyebabkan batang dan akar menjadi lebih besar atau menebal. Amati model 3D Pohon Mangga dan Detail Pohon Mangga untuk melihat meristem lateral berupa kambium vaskular dan kambium gabus.
                 </p>
 
                 <p>
-                    Kambium vaskular menghasilkan jaringan xilem sekunder dan floem sekunder. Xilem berfungsi mengangkut air dan mineral dari akar ke daun, sedangkan floem berfungsi mengangkut hasil fotosintesis dari daun ke seluruh bagian tumbuhan. Sementara itu, kambium gabus menghasilkan jaringan pelindung yang disebut gabus yang berfungsi melindungi batang tumbuhan dari kerusakan dan kehilangan air.
-                </p>
-
-                <p>
-                    Pertumbuhan sekunder umumnya terjadi pada tumbuhan berkayu, seperti mangga, jati, dan mahoni. Perhatikan model 3D untuk melihat meristem lateral berupa kambium vaskular dan kambium gabus. Aktivitas meristem lateral tersebut menyebabkan batang tumbuhan bertambah besar diameternya, sehingga menjadi semakin kuat dan kokoh seiring bertambahnya usia tanaman.
+                    Kambium vaskular menghasilkan jaringan xilem sekunder dan floem sekunder. Xilem berfungsi mengangkut air dan mineral dari akar ke daun, sedangkan floem berfungsi mengangkut hasil fotosintesis dari daun ke seluruh bagian tumbuhan. Sementara itu, kambium gabus menghasilkan jaringan pelindung yang disebut gabus yang berfungsi melindungi batang tumbuhan dari kerusakan dan kehilangan air. Pertumbuhan sekunder umumnya terjadi pada tumbuhan berkayu, seperti mangga, jati, dan mahoni.
                 </p>
 
                 <h4>3. Meristem Interkalar</h4>
                 <p>
-                    Meristem interkalar adalah jaringan meristem yang terletak di antara jaringan yang telah dewasa, biasanya berada di pangkal ruas batang atau pangkal daun.
+                    Meristem interkalar adalah jaringan meristem yang terletak di antara jaringan yang telah dewasa, biasanya berada di pangkal ruas batang atau pangkal daun. Amati model 3D Tanaman Tebu dan Detail Pangkal Ruas Tebu untuk melihat letak meristem interkalar.
                 </p>
 
                 <p>
-                    Meristem ini banyak ditemukan pada tumbuhan rumput-rumputan, seperti padi, jagung, dan tebu. Letak meristem interkalar pada tanaman tebu dapat diamati melalui model 3D. Fungsi meristem interkalar adalah membantu pertumbuhan batang atau daun dengan cepat setelah bagian tersebut dipotong atau rusak.
-                </p>
-
-                <p>
-                    Contohnya dapat dilihat pada tanaman tebu. Setelah batang tebu dipotong saat panen, beberapa waktu kemudian akan muncul tunas-tunas baru dari bagian pangkal batang atau ruas yang masih tersisa. Tunas tersebut kemudian tumbuh menjadi batang tebu baru. Hal ini terjadi karena adanya jaringan meristem yang masih aktif membelah sehingga tanaman dapat terus tumbuh dan berkembang kembali.
+                    Meristem ini banyak ditemukan pada tumbuhan rumput-rumputan, seperti padi, jagung, dan tebu. Fungsi meristem interkalar adalah membantu pertumbuhan batang atau daun dengan cepat setelah bagian tersebut dipotong atau rusak. Contohnya dapat dilihat pada tanaman tebu. Setelah batang tebu dipotong saat panen, beberapa waktu kemudian akan muncul tunas-tunas baru dari bagian pangkal batang atau ruas yang masih tersisa. Tunas tersebut kemudian tumbuh menjadi batang tebu baru.
                 </p>
             </div>
         </div>
@@ -380,44 +711,72 @@
         <div class="step-content" id="step3" style="display:none;">
             <div class="card intro-card">
                 <h3><i class="fas fa-search"></i> Petunjuk Aktivitas</h3>
-                <p>Amatilah gambar struktur jaringan meristem pada tabel berikut:</p>
+                <p>Amatilah gambar letak jaringan meristem pada tumbuhan berikut dengan saksama.</p>
+
                 <ol>
-                    <li>Amatilah model 3D yang ada dibawah ini dengan saksama dan perhatikan nomor-nomor yang menjadi penanda bagian-bagian tertentu.</li>
-                    <li>Bacalah penjelasan yang tersedia pada setiap bagian dengan cermat.</li>
-                    <li>Tentukan dan pilih nomor yang paling sesuai dengan penjelasan yang diberikan.</li>
-                    <li>Setelah semua jawaban terisi, klik tombol <strong>Periksa Jawaban</strong> untuk memeriksa ketepatan hasil identifikasimu.</li>
-                    <li>Pelajari kembali informasi pada bagian yang belum tepat berdasarkan hasil yang diperoleh.</li>
+                    <li>Perhatikan nomor 1, 2, dan 3 yang menjadi penanda bagian tumbuhan.</li>
+                    <li>Bacalah penjelasan pada bagian bawah gambar dan identifikasi dengan cermat.</li>
+                    <li>Tentukan nomor yang sesuai dengan jenis jaringan meristem yang ditanyakan.</li>
+                    <li>Isikan nomor pada kotak jawaban sesuai hasil pengamatanmu.</li>
+                    <li>Klik tombol <strong>Periksa Jawaban</strong> untuk memeriksa ketepatan hasil identifikasi.</li>
                 </ol>
             </div>
+
             <div class="matching-grid">
                 <div class="card visual-card">
-                    <div class="placeholder-label-img">
-                        <div class="node n1">1</div>
-                        <div class="node n2">2</div>
-                        <div class="node n3">3</div>
-                        <p>Diagram Derivat Epidermis (Stomata & Trikoma)</p>
+                    <div class="plant-image-box">
+                        <img 
+                            src="{{ asset('images/mencoba2.png') }}" 
+                            alt="Gambar letak jaringan meristem pada tumbuhan"
+                            class="plant-identification-img">
+
+                        <p class="image-caption">
+                            Gambar pohon rambutan
+                        </p>
                     </div>
                 </div>
+
                 <div class="card quiz-card">
-                    <h4>Identifikasi Derivat Epidermis</h4>
+                    <h4>Identifikasi Jaringan Meristem</h4>              
                     <div class="match-list">
                         <div class="match-row">
-                            <div class="match-label">Sel Penjaga (Guard Cell)</div>
-                            <input type="number" class="match-input" data-answer="1" placeholder="?">
+                            <label>Meristem Lateral</label>
+                            <input type="number" class="match-input" data-answer="1" min="1" max="3" placeholder="?">
                         </div>
+
                         <div class="match-row">
-                            <div class="match-label">Celah Stomata (Porus)</div>
-                            <input type="number" class="match-input" data-answer="2" placeholder="?">
+                            <label>Meristem Apikal</label>
+                            <input type="number" class="match-input" data-answer="2" min="1" max="3" placeholder="?">
                         </div>
+
                         <div class="match-row">
-                            <div class="match-label">Trikoma (Rambut Epidermis)</div>
-                            <input type="number" class="match-input" data-answer="3" placeholder="?">
+                            <label>Meristem Interkalar</label>
+                            <input type="number" class="match-input" data-answer="3" min="1" max="3" placeholder="?">
                         </div>
+                        <div class="info-identifikasi">
+                        <h4>Keterangan Penanda</h4>
+                        <p>
+                            <strong>Nomor 1</strong> menunjukkan bagian batang tumbuhan.
+                            yang berperan dalam pertumbuhan sekunder, yaitu pertumbuhan yang menyebabkan batang dan akar menjadi lebih besar atau menebal.
+                        </p>
+
+                        <p>
+                            <strong>Nomor 2</strong> menunjukkan bagian ujung akar.
+                           yang menyebabkan tanaman bertambah panjang atau tinggi. 
+                        </p>
+
+                        <p>
+                            <strong>Nomor 3</strong> menunjukkan bagian pangkal ruas tumbuhan.
+                           membantu pertumbuhan batang atau daun dengan cepat setelah bagian tersebut dipotong atau rusak. 
+                        </p>
                     </div>
+                    </div>
+
                     <button class="btn-check-materi" onclick="checkMatching()">
                         <i class="fas fa-check-circle"></i> Periksa Jawaban
                     </button>
-                    <div id="feedback-mencoba" class="feedback-msg" style="display:none; margin-top:12px;"></div>
+
+                    <div id="feedback-mencoba" style="margin-top: 15px; font-weight: 600; display: none;"></div>
                 </div>
             </div>
         </div>
@@ -836,14 +1195,15 @@ function switchStep(num) {
     // --- STEP 5: SUBMIT LOGIC KE DATABASE ---
     async function submitCommunication() {
         const jawab1 = document.getElementById('jawaban1').value.trim();
+        const jawab2 = document.getElementById('jawaban2').value.trim();
         const kesimpulan = document.getElementById('finalConclusion').value.trim();
 
-        if(!jawab1 || !kesimpulan) {
+        if(!jawab1 || !jawab2 || !kesimpulan) {
             panggilAlertCustom({ judul: 'Kolom Belum Lengkap', pesan: 'Harap isi semua kolom analisis dan kesimpulan sebelum mengirim!', tipe: 'warning' });
             return;
         }
 
-        const gabunganJawaban = "1. " + jawab1;
+        const gabunganJawaban = "1. " + jawab1 + "\n\n2. " + jawab2;
         
         const btn = document.querySelector('.btn-submit');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan Laporan...';
@@ -894,26 +1254,87 @@ function switchStep(num) {
         }
     }
 
-    // --- FULLSCREEN LOGIC ---
-    function toggleFullscreen() {
-        const e = document.getElementById('container3D');
-        const btnIcon = document.querySelector('#fullscreenBtn i');
-        const btnText = document.querySelector('#fullscreenBtn');
+    // --- MODEL 3D LOGIC ---
+    function switchModel3D(button) {
+        const viewer = document.getElementById('model3d');
+        const caption = document.querySelector('[data-model-caption]');
+
+        if (!viewer || !button) return;
+
+        const modelSrc = button.dataset.modelSrc;
+        const modelCaption = button.dataset.modelCaption || 'Model 3D';
+
+        if (!modelSrc) return;
+
+        viewer.setAttribute('src', modelSrc);
+        viewer.setAttribute('alt', modelCaption);
+        viewer.style.background = '#0f172a';
+        viewer.style.backgroundColor = '#0f172a';
+        viewer.style.setProperty('--poster-color', '#0f172a');
+        viewer.style.setProperty('--progress-mask', '#0f172a');
+        viewer.style.setProperty('--progress-bar-color', '#f59e0b');
+
+        if (caption) {
+            caption.textContent = modelCaption;
+        }
+
+        document.querySelectorAll('.model-number-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        button.classList.add('active');
+
+        setTimeout(() => {
+            if (typeof viewer.updateFraming === 'function') viewer.updateFraming();
+            if (typeof viewer.jumpCameraToGoal === 'function') viewer.jumpCameraToGoal();
+        }, 300);
+    }
+
+    // --- FULLSCREEN LOGIC MODEL 3D ---
+    function toggleFullscreen(button) {
+        const section = document.getElementById('modelSection3D');
+
+        if (!section || !button) return;
 
         if (!document.fullscreenElement) {
-            if (e.requestFullscreen) e.requestFullscreen();
-            btnIcon.className = 'fas fa-compress';
-            btnText.innerHTML = '<i class="fas fa-compress"></i> Perkecil Layar';
+            if (section.requestFullscreen) {
+                section.requestFullscreen();
+            } else if (section.webkitRequestFullscreen) {
+                section.webkitRequestFullscreen();
+            }
+
+            button.innerHTML = '<i class="fas fa-compress"></i> Perkecil Layar';
         } else {
-            if (document.exitFullscreen) document.exitFullscreen();
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+
+            button.innerHTML = '<i class="fas fa-expand"></i> Layar Penuh';
         }
+
+        setTimeout(() => {
+            const viewer = document.getElementById('model3d');
+            if (viewer && typeof viewer.updateFraming === 'function') viewer.updateFraming();
+            if (viewer && typeof viewer.jumpCameraToGoal === 'function') viewer.jumpCameraToGoal();
+        }, 300);
     }
 
     document.addEventListener('fullscreenchange', () => {
         const btnText = document.querySelector('#fullscreenBtn');
-        if (!document.fullscreenElement) {
-            btnText.innerHTML = '<i class="fas fa-expand"></i> Layar Penuh';
+        const viewer = document.getElementById('model3d');
+
+        if (btnText) {
+            btnText.innerHTML = document.fullscreenElement
+                ? '<i class="fas fa-compress"></i> Perkecil Layar'
+                : '<i class="fas fa-expand"></i> Layar Penuh';
         }
+
+        setTimeout(() => {
+            if (viewer && typeof viewer.updateFraming === 'function') viewer.updateFraming();
+            if (viewer && typeof viewer.jumpCameraToGoal === 'function') viewer.jumpCameraToGoal();
+        }, 300);
     });
 
     setInterval(loadMessages, 3000);

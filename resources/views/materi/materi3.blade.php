@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
     /* ============================================
@@ -75,19 +76,132 @@
     .intro-card .icon-circle { width: 50px; height: 50px; background: #ecfdf5; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
     .intro-card .icon-circle i { font-size: 24px; color: var(--primary); }
     
-    .model-3d-container { position: relative; height: 10px; background: #0f172a; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .btn-fullscreen { position: absolute; bottom: 33px; right: 30px; background: #f59e0b; color: #0f172a; border: none; padding: 6px 14px; border-radius: 10px; cursor: pointer; font-size: var(--fs-button-small); font-weight: var(--fw-medium); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4); z-index: 10; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
-    .btn-fullscreen:hover { background: #d97706; transform: scale(1.03); }
+    /* ================= MODEL 3D ================= */
+    .model-section {
+        position: relative;
+    }
 
-    /* PENDUKUNG FALLBACK: Jika sistem HTML5 API Browser gagal, class ini menjamin layar penuh melalui CSS */
-    .model-3d-container.is-fullscreen {
+    .model-3d-container {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        background: #0f172a;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .viewer-box {
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: #0f172a;
+    }
+
+    .model-caption {
+        margin-top: 12px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        line-height: 1.6;
+    }
+
+    .btn-fullscreen {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        background: #f59e0b;
+        color: #0f172a;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: var(--fs-button-small);
+        font-weight: var(--fw-medium);
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+        z-index: 20;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-fullscreen:hover {
+        background: #d97706;
+        transform: scale(1.03);
+    }
+
+    /* ================= FULLSCREEN MODEL 3D - FIX LAYOUT LARAVEL ================= */
+    html.model3d-lock,
+    body.model3d-lock {
+        overflow: hidden !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    #modelSection3D.is-fullscreen {
         position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
+        inset: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        z-index: 999999 !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        border: none !important;
         border-radius: 0 !important;
+        background: #0f172a !important;
+        box-shadow: none !important;
+        z-index: 2147483647 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    #modelSection3D.is-fullscreen .model-3d-container {
+        flex: 1 1 auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        border-radius: 12px !important;
+        background: #0f172a !important;
+        box-shadow: none !important;
+    }
+
+    #modelSection3D.is-fullscreen .viewer-box {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+        background: #0f172a !important;
+    }
+
+    #modelSection3D.is-fullscreen .model-caption {
+        flex: 0 0 auto !important;
+        color: #ffffff !important;
+        margin-top: 12px !important;
+        margin-bottom: 0 !important;
+        background: rgba(15, 23, 42, 0.85) !important;
+        padding: 8px 14px !important;
+        border-radius: 10px !important;
+    }
+
+    #modelSection3D.is-fullscreen .btn-fullscreen {
+        position: absolute !important;
+        right: 24px !important;
+        bottom: 24px !important;
+        z-index: 2147483647 !important;
+    }
+
+    @media (max-width: 700px) {
+        .model-3d-container {
+            height: 360px;
+        }
+
+        .btn-fullscreen {
+            bottom: 16px;
+            right: 16px;
+            padding: 7px 12px;
+        }
     }
 
     /* Chat UI */
@@ -196,11 +310,11 @@
         .btn-kembali, .btn-locked { width: 100%; }
     }
     .intro-card p{
-    text-align: justify;
-    line-height: 1.8;
-    margin-bottom: 12px;
-    font-size: 16px;
-    }
+        text-align: justify;
+        line-height: 1.8;
+        margin-bottom: 12px;
+        font-size: 16px;
+        }
 
     .intro-card h4{
         margin-top: 20px;
@@ -212,6 +326,55 @@
     .intro-card ol{
         padding-left: 22px;
         line-height: 1.8;
+    }
+    .plant-image-box {
+        width: 100%;
+        text-align: center;
+    }
+
+    .plant-identification-img {
+        width: 100%;
+        max-width: 720px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        background: #ffffff;
+    }
+
+    .image-caption {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        text-align: center;
+    }
+
+    .info-identifikasi {
+        margin-top: 16px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+    }
+
+    .info-identifikasi h4 {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #14532d;
+    }
+
+    .info-identifikasi p {
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #475569;
+        text-align: justify;
+    }
+
+    .info-identifikasi p:last-child {
+        margin-bottom: 0;
     }
 </style>
 
@@ -242,15 +405,35 @@
     </div>
 
     {{-- ================= AREA MODEL 3D ================= --}}
-    <div class="model-section card">
+    <div id="modelSection3D" class="model-section card">
         <div id="container3D" class="model-3d-container">
-            <div id="model3d" class="viewer-box"></div>
-            <button id="fullscreenBtn" class="btn-fullscreen" onclick="toggleFullscreen()">
+            <model-viewer
+                id="model3d"
+                class="viewer-box"
+                src="{{ asset('models/tomaat.glb') }}"
+                alt="Model 3D Tanaman Tomat"
+                camera-controls
+                auto-rotate
+                camera-orbit="0deg 65deg 12m"
+                camera-target="0m 1.4m 0m"
+                field-of-view="50deg"
+                min-camera-orbit="auto auto 2m"
+                max-camera-orbit="auto auto 25m"
+                shadow-intensity="1"
+                exposure="1"
+                interaction-prompt="none"
+                style="width: 100%; height: 100%; background-color: #0f172a;">
+            </model-viewer>
+
+            <button type="button" id="fullscreenBtn" class="btn-fullscreen">
                 <i class="fas fa-expand"></i> Layar Penuh
             </button>
         </div>
-    </div>
 
+        <p class="model-caption" style="font-weight: 600 !important; font-size: 15px !important;">
+            Model 3D Pertumbuhan primer pada tanaman tomat
+        </p>
+    </div>
     {{-- ================= NAVIGASI TABS ================= --}}
     <nav class="saintifik-nav">
         <button class="nav-item active" id="btn-step1" onclick="switchStep(1)">
@@ -390,56 +573,77 @@
     <div class="step-content" id="step3" style="display:none;">
         <div class="card intro-card">
             <h3><i class="fas fa-search"></i> Petunjuk Aktivitas</h3>
-            <p>Amatilah tahapan perkembangan jaringan muda pada tumbuhan, kemudian lakukan identifikasi berikut:</p>
+            <p>Amatilah gambar pertumbuhan pohon cempedak berikut dengan saksama.</p>
 
             <ol>
-                <li>Perhatikan nomor yang menunjukkan bagian atau proses perkembangan jaringan muda.</li>
-                <li>Bacalah setiap keterangan yang tersedia dengan cermat.</li>
-                <li>Pilih nomor yang paling sesuai dengan proses pertumbuhan atau perkembangan jaringan muda.</li>
-                <li>Klik tombol <strong>Periksa Jawaban</strong> setelah semua jawaban terisi.</li>
-                <li>Pelajari kembali bagian yang belum tepat berdasarkan hasil pemeriksaan.</li>
+                <li>Perhatikan nomor 1, 2, dan 3 yang menjadi penanda arah pertumbuhan pada tumbuhan.</li>
+                <li>Bacalah penjelasan pada bagian bawah gambar dan identifikasi dengan cermat.</li>
+                <li>Tentukan nomor yang sesuai dengan jenis pertumbuhan yang ditunjukkan pada gambar.</li>
+                <li>Isikan nomor pada kotak jawaban sesuai hasil pengamatanmu.</li>
+                <li>Klik tombol <strong>Periksa Jawaban</strong> untuk memeriksa ketepatan hasil identifikasi.</li>
             </ol>
         </div>
 
         <div class="matching-grid">
             <div class="card visual-card">
-                <div class="placeholder-label-img">
-                    <div class="node n1">1</div>
-                    <div class="node n2">2</div>
-                    <div class="node n3">3</div>
-                    <p>Diagram Perkembangan Jaringan Muda Tumbuhan</p>
+                <div class="plant-image-box">
+                    <img 
+                        src="{{ asset('images/mencoba3.png') }}" 
+                        alt="Gambar pertumbuhan pohon cempedak dengan penanda"
+                        class="plant-identification-img"
+                    >
+
+                    <p class="image-caption">
+                        Gambar pertumbuhan pohon cempedak dengan penanda arah pertumbuhan
+                    </p>
                 </div>
             </div>
 
             <div class="card quiz-card">
-                <h4>Identifikasi Perkembangan Jaringan Muda</h4>
+                <h4>Identifikasi Pertumbuhan</h4>
 
                 <div class="match-list">
                     <div class="match-row">
-                        <div class="match-label">Pertumbuhan Primer</div>
-                        <input type="number" class="match-input" data-answer="1" placeholder="?">
+                        <label>Xilem sekunder</label>
+                        <input type="number" class="match-input" data-answer="2" min="1" max="3" placeholder="?">
                     </div>
 
                     <div class="match-row">
-                        <div class="match-label">Pertumbuhan Sekunder</div>
-                        <input type="number" class="match-input" data-answer="2" placeholder="?">
+                        <label>Sekunder</label>
+                        <input type="number" class="match-input" data-answer="3" min="1" max="3" placeholder="?">
                     </div>
 
                     <div class="match-row">
-                        <div class="match-label">Diferensiasi Sel Menjadi Jaringan Dewasa</div>
-                        <input type="number" class="match-input" data-answer="3" placeholder="?">
+                        <label>Primer</label>
+                        <input type="number" class="match-input" data-answer="1" min="1" max="3" placeholder="?">
                     </div>
+                </div>
+                <div class="info-identifikasi">
+                    <h4>Keterangan Penanda</h4>
+
+                    <p>
+                        <strong>Nomor 1</strong> menunjukkan arah pertumbuhan ke atas pada pucuk tanaman.
+                        Pertumbuhan ini menyebabkan pohon bertambah tinggi.
+                    </p>
+
+                    <p>
+                        <strong>Nomor 2</strong> menunjukkan arah pertumbuhan akar yang berfungsi mengangkut air dan mineral ke daun.
+                    </p>
+
+                    <p>
+                        <strong>Nomor 3</strong> menunjukkan pertumbuhan pada bagian batang.
+                        Pertumbuhan ini menyebabkan batang bertambah tebal atau membesar.
+                    </p>
                 </div>
 
                 <button class="btn-check-materi" onclick="checkMatching()">
                     <i class="fas fa-check-circle"></i> Periksa Jawaban
                 </button>
 
-                <div id="feedback-mencoba" class="feedback-msg" style="display:none; margin-top:12px;"></div>
+                <div id="feedback-mencoba" style="margin-top: 15px; font-weight: 600; display: none;"></div>
             </div>
         </div>
     </div>
-
     {{-- STEP 4: MENALAR --}}
     <div class="step-content" id="step4" style="display:none;">
         <div class="card intro-card">
@@ -476,7 +680,7 @@
                             </td>
                         </tr>
 
-                        <tr data-answer="benar">
+                        <tr data-answer="salah">
                             <td>Pertumbuhan sekunder terjadi pada ujung daun tumbuhan.</td>
                             <td>
                                 <div class="tf-btn-group">
@@ -486,7 +690,7 @@
                             </td>
                         </tr>
 
-                        <tr data-answer="salah">
+                        <tr data-answer="benar">
                             <td>Kambium berperan dalam pertumbuhan sekunder pada tumbuhan.</td>
                             <td>
                                 <div class="tf-btn-group">
@@ -495,7 +699,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr data-answer="benar">
+                        <tr data-answer="salah">
                             <td>Floem berfungsi mengangkut air dan mineral dari akar ke daun.</td>
                             <td>
                                 <div class="tf-btn-group">
@@ -505,7 +709,7 @@
                             </td>
                         </tr>
 
-                        <tr data-answer="salah">
+                        <tr data-answer="benar">
                             <td>Pertumbuhan sekunder membuat batang tumbuhan menjadi lebih besar dan kuat.</td>
                             <td>
                                 <div class="tf-btn-group">
@@ -863,14 +1067,15 @@ function switchStep(num) {
     // --- STEP 5: SUBMIT LOGIC KE DATABASE ---
     async function submitCommunication() {
         const jawab1 = document.getElementById('jawaban1').value.trim();
+        const jawab2 = document.getElementById('jawaban2').value.trim();
         const kesimpulan = document.getElementById('finalConclusion').value.trim();
 
-        if(!jawab1 || !kesimpulan) {
+        if(!jawab1 || !jawab2 || !kesimpulan) {
             panggilAlertCustom({ judul: 'Kolom Belum Lengkap', pesan: 'Harap isi semua kolom analisis dan kesimpulan sebelum mengirim!', tipe: 'warning' });
             return;
         }
 
-        const gabunganJawaban = "1. " + jawab1;
+        const gabunganJawaban = "1. " + jawab1 + "\n\n2. " + jawab2;
         
         const btn = document.querySelector('.btn-submit');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan Laporan...';
@@ -921,32 +1126,193 @@ function switchStep(num) {
         }
     }
 
-    // --- FULLSCREEN LOGIC ---
-    function toggleFullscreen() {
-        const e = document.getElementById('container3D');
-        const btnIcon = document.querySelector('#fullscreenBtn i');
-        const btnText = document.querySelector('#fullscreenBtn');
+    // ==========================================================
+    // FULLSCREEN LOGIC MODEL 3D - PINDAH KE BODY AGAR TIDAK TERKUNCI LAYOUT
+    // ==========================================================
+    (function () {
+        let placeholder = null;
+        let originalParent = null;
 
-        if (!document.fullscreenElement) {
-            if (e.requestFullscreen) e.requestFullscreen();
-            btnIcon.className = 'fas fa-compress';
-            btnText.innerHTML = '<i class="fas fa-compress"></i> Perkecil Layar';
+        function getSection() {
+            return document.getElementById('modelSection3D');
+        }
+
+        function getButton() {
+            return document.getElementById('fullscreenBtn');
+        }
+
+        function getModel() {
+            return document.getElementById('model3d');
+        }
+
+        function isNativeFullscreen() {
+            return document.fullscreenElement ||
+                   document.webkitFullscreenElement ||
+                   document.msFullscreenElement;
+        }
+
+        function updateButton(active) {
+            const btn = getButton();
+            if (!btn) return;
+
+            btn.innerHTML = active
+                ? '<i class="fas fa-compress"></i> Perkecil Layar'
+                : '<i class="fas fa-expand"></i> Layar Penuh';
+        }
+
+        function refreshModel3DView() {
+            const model = getModel();
+
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+
+                if (model && typeof model.updateFraming === 'function') {
+                    model.updateFraming();
+                }
+
+                if (model && typeof model.jumpCameraToGoal === 'function') {
+                    model.jumpCameraToGoal();
+                }
+            }, 200);
+        }
+
+        function moveSectionToBody() {
+            const section = getSection();
+            if (!section || placeholder) return;
+
+            originalParent = section.parentNode;
+            placeholder = document.createComment('model-3d-placeholder');
+            originalParent.insertBefore(placeholder, section);
+            document.body.appendChild(section);
+        }
+
+        function restoreSectionPosition() {
+            const section = getSection();
+            if (!section || !placeholder || !originalParent) return;
+
+            originalParent.insertBefore(section, placeholder);
+            placeholder.remove();
+
+            placeholder = null;
+            originalParent = null;
+        }
+
+        async function openFullscreen(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            const section = getSection();
+            if (!section) return;
+
+            moveSectionToBody();
+
+            section.classList.add('is-fullscreen');
+            document.documentElement.classList.add('model3d-lock');
+            document.body.classList.add('model3d-lock');
+            updateButton(true);
+            refreshModel3DView();
+
+            const requestFullscreen =
+                section.requestFullscreen ||
+                section.webkitRequestFullscreen ||
+                section.msRequestFullscreen;
+
+            if (requestFullscreen) {
+                try {
+                    await requestFullscreen.call(section);
+                } catch (error) {
+                    // Jika browser menolak Fullscreen API, fallback CSS tetap aktif.
+                    console.warn('Browser menolak Fullscreen API. Menggunakan fallback CSS fullscreen.');
+                }
+            }
+
+            refreshModel3DView();
+        }
+
+        async function closeFullscreen() {
+            const section = getSection();
+            if (!section) return;
+
+            const exitFullscreen =
+                document.exitFullscreen ||
+                document.webkitExitFullscreen ||
+                document.msExitFullscreen;
+
+            if (isNativeFullscreen() && exitFullscreen) {
+                try {
+                    await exitFullscreen.call(document);
+                } catch (error) {
+                    console.warn('Gagal keluar dari Fullscreen API. Menutup fallback CSS.');
+                }
+            }
+
+            section.classList.remove('is-fullscreen');
+            document.documentElement.classList.remove('model3d-lock');
+            document.body.classList.remove('model3d-lock');
+            updateButton(false);
+            restoreSectionPosition();
+            refreshModel3DView();
+        }
+
+        async function toggleFullscreen(event) {
+            const section = getSection();
+            if (!section) return;
+
+            if (section.classList.contains('is-fullscreen')) {
+                await closeFullscreen();
+            } else {
+                await openFullscreen(event);
+            }
+        }
+
+        function handleNativeFullscreenChange() {
+            const section = getSection();
+            if (!section) return;
+
+            // Kalau pengguna keluar dengan Esc dari fullscreen browser,
+            // bersihkan juga fullscreen CSS dan kembalikan posisi elemen.
+            if (!isNativeFullscreen() && section.classList.contains('is-fullscreen')) {
+                section.classList.remove('is-fullscreen');
+                document.documentElement.classList.remove('model3d-lock');
+                document.body.classList.remove('model3d-lock');
+                updateButton(false);
+                restoreSectionPosition();
+                refreshModel3DView();
+            }
+        }
+
+        function initFullscreenButton() {
+            const btn = getButton();
+            if (!btn) return;
+
+            btn.addEventListener('click', toggleFullscreen);
+
+            document.addEventListener('fullscreenchange', handleNativeFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleNativeFullscreenChange);
+            document.addEventListener('msfullscreenchange', handleNativeFullscreenChange);
+
+            document.addEventListener('keydown', function (event) {
+                const section = getSection();
+
+                if (event.key === 'Escape' && section && section.classList.contains('is-fullscreen')) {
+                    closeFullscreen();
+                }
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initFullscreenButton);
         } else {
-            if (document.exitFullscreen) document.exitFullscreen();
+            initFullscreenButton();
         }
-    }
-
-    document.addEventListener('fullscreenchange', () => {
-        const btnText = document.querySelector('#fullscreenBtn');
-        if (!document.fullscreenElement) {
-            btnText.innerHTML = '<i class="fas fa-expand"></i> Layar Penuh';
-        }
-    });
+    })();
 
     setInterval(loadMessages, 3000);
-    window.onload = () => { 
-        switchStep(1); 
+    window.addEventListener('load', function () {
+        switchStep(1);
         loadMessages();
-    };
+    });
 </script>
 @endsection
